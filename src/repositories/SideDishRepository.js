@@ -22,6 +22,7 @@ const createSideDishModel = async(payload)=>{
 const findSideDishById = async (sideDish_id) => {
     const sideDish = await sideDishModel.findById(sideDish_id);
     if (!sideDish || sideDish.isDeleted) {
+        console.log('Failed to find side dish')
         throw new NotFoundError('không tìm thấy món phụ này');
     }
     return sideDish;
