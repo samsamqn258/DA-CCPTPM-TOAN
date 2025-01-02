@@ -8,21 +8,30 @@ const {
   removeUndefinedObject,
 } = require("../utils/index");
 // tạo món phụ
-const createSideDishModel = async (payload) => {
-  const checkName = await isDuplicateNameOnCreate({
-    model: sideDishModel,
-    fieldName: "sideDish_name",
-    name: payload.sideDish_name,
-  });
-  if (checkName) {
-    throw new BadRequestError(`${payload.sideDish_name} đã tồn tại`);
-  }
-  const sideDish = await sideDishModel.create(payload);
-  if (!sideDish) {
-    throw new BadRequestError("Failed to create side dish");
-  }
-  return sideDish;
-};
+const createSideDishModel = async(payload)=>{
+    const checkName = await isDuplicateNameOnCreate({
+        model: sideDishModel,
+        fieldName:'sideDish_name',
+        name: payload.sideDish_name
+    })
+    if(checkName){
+        throw new BadRequestError(`${payload.sideDish_name} đã tồn tại`)
+    }
+    const sideDish = await sideDishModel.create(payload)
+    if(!sideDish){
+        throw new BadRequestError('Failed to create side dish')
+    }
+    return sideDish
+}
+// tìm món phụ theo id
+const findSideDishById = async (sideDish_id) => {
+    const sideDish = await sideDishModel.findById(sideDish_id);
+    if (!sideDish || sideDish.isDeleted) {
+        console.log('Failed to find side dish')
+        throw new NotFoundError('không tìm thấy món phụ này');
+    }
+    return sideDish;
+}
 
 // cập nhật món phụ
 const updateSideDishById = async ({ sideDish_id, payload }) => {
